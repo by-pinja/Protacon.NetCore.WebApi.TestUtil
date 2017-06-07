@@ -17,5 +17,14 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
                 .WithContentOf<Byte[]>()
                 .Passing(x => x.Length.Should().Be(4));
         }
+
+        [Fact]
+        public void WhenHtmlPageIsReturned_ThenResultsCanBeAsserted()
+        {
+            TestHost.Run<TestStartup>().Get("/page/")
+                .ExpectStatusCode(HttpStatusCode.OK)
+                .WithContentOf<string>()
+                .Passing(x => x.Should().Contain("Hello World"));
+        }
     }
 }

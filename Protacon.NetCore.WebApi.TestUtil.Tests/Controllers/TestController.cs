@@ -60,8 +60,19 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Controllers
         public IActionResult File()
         {
             var stream = new MemoryStream(new byte[]{ 1, 2, 3, 4 });
-
             return new FileStreamResult(stream, "application/pdf");
+        }
+
+        [HttpGet("/page/")]
+        public IActionResult Page()
+        {
+            var content = "<html><body><h1>Hello World</h1><p>Some text</p></body></html>";
+
+            return new ContentResult
+            {
+                Content = content,
+                ContentType = "text/html",
+            };
         }
     }
 }
