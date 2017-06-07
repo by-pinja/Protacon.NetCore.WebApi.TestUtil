@@ -1,5 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/cv4tmosjkxe7dpom/branch/master?svg=true)](https://ci.appveyor.com/project/savpek/protacon-netcore-webapi-testutil/branch/master)
 
+[![Nuget](https://img.shields.io/nuget/dt/Protacon.NetCore.WebApi.TestUtil.svg)](https://www.nuget.org/packages/Protacon.NetCore.WebApi.TestUtil/)
+
 # Test utilities for Net Core web api
 
 This is lightweight wrapper and collection of useful tools to work with .Net Core isolated test host.
