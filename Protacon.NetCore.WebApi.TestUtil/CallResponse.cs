@@ -10,6 +10,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
     public class CallResponse
     {
         private readonly HttpResponseMessage _response;
+        private HttpStatusCode? _expectedCode;
 
         public CallResponse(HttpResponseMessage response)
         {
@@ -22,6 +23,9 @@ namespace Protacon.NetCore.WebApi.TestUtil
             {
                 throw new ExpectedStatusCodeException($"Expected statuscode '{code}' but got '{(int)_response.StatusCode}'");
             }
+
+            _expectedCode = code;
+
             return this;
         }
 
@@ -43,13 +47,13 @@ namespace Protacon.NetCore.WebApi.TestUtil
             return _response.Headers.Select(x => x.Key.ToString()).Aggregate("", (a, b) => $"{a}, {b}");
         }
 
-        public CallData<T> WithContentOf<T>(HttpStatusCode specialCodeToAccept = HttpStatusCode.OK)
+        public CallData<T> WithContentOf<T>()
         {
             var code = (int)_response.StatusCode;
 
-            if ((code > 299 || code < 199) && code != (int)specialCodeToAccept)
-                throw new InvalidOperationException(
-                    $"Tried to get data from non ok statuscode response, expected status is '2xx' or '{(int)specialCodeToAccept}' but got '{code}' with content '{_response.Content.ReadAsStringAsync().Result}'");
+            if ((code > 299 || code < 199) && code != (int?)_expectedCode)
+                throw new ExpectedStatusCodeException(
+                    $"Tried to get data from non ok statuscode response, expected status is '2xx' or '{_expectedCode}' but got '{code}' with content '{_response.Content.ReadAsStringAsync().Result}'");
 
             if (!_response.Content.Headers.Contains("Content-Type"))
                 throw new InvalidOperationException("Response didn't contain any 'Content-Type'. Reason may be that you didn't return anything?");

@@ -57,5 +57,22 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
                 .Invoking(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
                 .ShouldThrow<ExpectedStatusCodeException>();
         }
+
+        [Fact]
+        public void WhenNonAcceptedCodeIsExpected_ThenAcceptItAsResult()
+        {
+            TestHost.Run<TestStartup>().Get("/errorcontent/")
+                .ExpectStatusCode(HttpStatusCode.NotFound)
+                .WithContentOf<DummyRequest>()
+                .Passing(x => x.Value.Should().Be("error"));
+        }
+
+        [Fact]
+        public void WhenExpectedCodeIsNotDefinedOnError_ThenFail()
+        {
+            TestHost.Run<TestStartup>().Get("/errorcontent/")
+                .Invoking(x => x.WithContentOf<DummyRequest>())
+                .ShouldThrow<ExpectedStatusCodeException>();
+        }
     }
 }

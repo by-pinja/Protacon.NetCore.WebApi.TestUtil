@@ -63,6 +63,15 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Controllers
             return new FileStreamResult(stream, "application/pdf");
         }
 
+        [HttpGet("/errorcontent/")]
+        public IActionResult ErrorWithContent()
+        {
+            return NotFound(new DummyRequest
+            {
+                Value = "error"
+            });
+        }
+
         [HttpGet("/page/")]
         public IActionResult Page()
         {
