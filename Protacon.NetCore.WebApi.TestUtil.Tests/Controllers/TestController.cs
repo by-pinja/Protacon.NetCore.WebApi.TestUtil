@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Protacon.NetCore.WebApi.TestUtil.Tests.Dummy;
 
@@ -53,6 +54,14 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Controllers
                 throw new InvalidOperationException();
 
             return NoContent();
+        }
+
+        [HttpGet("/file/")]
+        public IActionResult File()
+        {
+            var stream = new MemoryStream(new byte[]{ 1, 2, 3, 4 });
+
+            return new FileStreamResult(stream, "application/pdf");
         }
     }
 }

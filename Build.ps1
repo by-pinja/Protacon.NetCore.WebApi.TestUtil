@@ -7,8 +7,8 @@ dotnet build
 
 dotnet test $PSScriptRoot\Protacon.NetCore.WebApi.TestUtil.Tests\Protacon.NetCore.WebApi.TestUtil.Tests.csproj
 
-$version = if($env:APPVEYOR_REPO_TAG_NAME) {
-    $env:APPVEYOR_REPO_TAG_NAME
+$version = if($env:APPVEYOR_REPO_TAG) {
+    "$env:APPVEYOR_REPO_TAG_NAME"
 } else {
     "0.0.1-beta$env:APPVEYOR_BUILD_NUMBER"
 }

@@ -56,9 +56,23 @@ namespace Protacon.NetCore.WebApi.TestUtil
 
             var contentType = _response.Content.Headers.Single(x => x.Key == "Content-Type").Value.FirstOrDefault() ?? "";
 
-            if (!contentType.Contains("application/json"))
-                throw new InvalidOperationException($"Only 'application/json' are accepted at this point, got '{contentType}'.");
+            switch (contentType)
+            {
+                case var ctype when ctype.StartsWith("application/json"):
+                    return ParseJson<T>();
+                case "application/pdf":
+                    if(typeof(T) != typeof(byte[]))
+                        throw new InvalidOperationException("Only output type of 'byte[]' is supported for 'application/pdf'.");
 
+                    var data = (object)_response.Content.ReadAsStringAsync().Result.Select(Convert.ToByte).ToArray();
+                    return new CallData<T>((T)data);
+                default:
+                    throw new InvalidOperationException($"Unsupported content type '{contentType}'.");
+            }
+        }
+
+        private CallData<T> ParseJson<T>()
+        {
             try
             {
                 var asObject = JsonConvert.DeserializeObject<T>(_response.Content.ReadAsStringAsync().Result);
