@@ -64,7 +64,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
                     if(typeof(T) != typeof(byte[]))
                         throw new InvalidOperationException("Only output type of 'byte[]' is supported for 'application/pdf'.");
 
-                    var data = (object)_response.Content.ReadAsStringAsync().Result.Select(Convert.ToByte).ToArray();
+                    var data = (object)_response.Content.ReadAsByteArrayAsync().Result.ToArray();
                     return new CallData<T>((T)data);
                 default:
                     throw new InvalidOperationException($"Unsupported content type '{contentType}'.");
