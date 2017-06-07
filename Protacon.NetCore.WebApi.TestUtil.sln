@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.NetCore.WebApi.TestUtil", "Protacon.NetCore.WebApi.TestUtil\Protacon.NetCore.WebApi.TestUtil.csproj", "{20D42401-8DCD-4604-A526-A90E6C33B1CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protacon.NetCore.WebApi.TestUtil.Tests", "Protacon.NetCore.WebApi.TestUtil.Tests\Protacon.NetCore.WebApi.TestUtil.Tests.csproj", "{245A3E44-419F-4D95-BD83-F0A08A877074}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20D42401-8DCD-4604-A526-A90E6C33B1CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20D42401-8DCD-4604-A526-A90E6C33B1CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20D42401-8DCD-4604-A526-A90E6C33B1CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20D42401-8DCD-4604-A526-A90E6C33B1CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{245A3E44-419F-4D95-BD83-F0A08A877074}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{245A3E44-419F-4D95-BD83-F0A08A877074}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{245A3E44-419F-4D95-BD83-F0A08A877074}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{245A3E44-419F-4D95-BD83-F0A08A877074}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
