@@ -73,6 +73,10 @@ namespace Protacon.NetCore.WebApi.TestUtil
         public TestHost MockPassing<TMock>(Action<TMock> asserts)
         {
             var target = _server.Host.Services.GetService(typeof(TMock));
+
+            if (target == null)
+                throw new InvalidOperationException($"Tried to mock type '{typeof(TMock)}' but nothing matched in current host container.");
+
             asserts((TMock)target);
             return this;
         }
