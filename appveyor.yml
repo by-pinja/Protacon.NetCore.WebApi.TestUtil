@@ -14,7 +14,7 @@ artifacts:
   name: NuGet
 deploy:
 - provider: NuGet
-  name: production 
+  name: production
   api_key:
     secure: AcGQeBVVsXFTv0cJ4Jo0q6dKMcAmqXX2V5eDBk1tittf3oh/iaH3VqMTEd+3F+Qw
   on:
