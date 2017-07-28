@@ -32,7 +32,8 @@ This is lightweight wrapper and collection of useful tools to work with .Net Cor
     }
 ```
 
-## Example test startup class
+## Example StartUp classes
+### Standalone test startup
 ```cs
     public class TestStartup
     {
@@ -74,6 +75,57 @@ This is lightweight wrapper and collection of useful tools to work with .Net Cor
     }
 ```
 
+### With real Startup
+```cs
+public class TestStartup
+{
+    private readonly Startup _original;
+
+    public TestStartup(IHostingEnvironment env)
+    {
+        _original = new Startup(env);
+    }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        _original.ConfigureServices(services);
+
+        services
+            .RemoveService<IInvitationMailer>()
+            .AddSingleton(Substitute.For<IInvitationMailer>())
+            .RemoveService<ICurrentAuthenticatedUserFromExternal>()
+            .AddSingleton(Substitute.For<ICurrentAuthenticatedUserFromExternal>())
+            .RemoveService<ICurrentUserAccess>()
+            .AddTransient(_ =>
+            {
+                var currentUserAccessMock = Substitute.For<ICurrentUserAccess>();
+                currentUserAccessMock.CanManageGroup(Arg.Any<Guid>()).Returns(true);
+                currentUserAccessMock.CanManageApp(Arg.Any<Guid>()).Returns(true);
+                currentUserAccessMock.CanManageUser(Arg.Any<Guid>()).Returns(true);
+                currentUserAccessMock.CanManageApplications().Returns(true);
+                return currentUserAccessMock;
+            });
+
+        services
+            .RemoveService<AuthorizationDataContext>()
+            .RemoveService<DbContextOptions<AuthorizationDataContext>>()
+
+        services.Configure<TokenSettings>(x =>
+        {
+            x.Secret = "IsolatedTestStartupIsolatedTestStartupIsolatedTestStartup";
+            x.RefreshTokenSecret = "IsolatedTestStartupIsolatedTestStartupIsolatedTestStartup_Refresh";
+            x.InitialTokenSecret = "IsolatedTestStartupIsolatedTestStartupIsolatedTestStartup_Initial";
+            x.TokenExpiresSeconds = 120
+        });
+    }
+
+    public void Configure(IApplicationBuilder app)
+    {
+        app.UseMiddleware<TestAuthenticationMiddlewareForClientJwt>();
+        app.UseMvc();
+    }
+}
+```
 ## Further
 See complete list of examples from test project.
 
