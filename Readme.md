@@ -32,6 +32,48 @@ This is lightweight wrapper and collection of useful tools to work with .Net Cor
     }
 ```
 
+## Example test startup class
+```cs
+    public class TestStartup
+    {
+        public TestStartup(IHostingEnvironment env)
+        {
+        }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc(options => options.Filters.Add(new ValidateModelAttribute()));
+
+            services.AddNodeServices();
+
+            services.AddTransient<IPdfConvert, PdfConvert>();
+            services.AddTransient<IPdfStorage, GoogleCloudPdfStorage>();
+            services.AddTransient<IPdfQueue, PdfQueue>();
+            services.AddTransient<IErrorPages, ErrorPages>();
+
+            services.AddDbContext<PdfDataContext>(opt => opt.UseInMemoryDatabase());
+
+            services.AddSingleton<IPdfStorage, InMemoryPdfStorage>();
+
+            services.AddTransient<IPdfMerger, PdfMerger>();
+
+            services.AddHangfire(config => config.UseMemoryStorage());
+
+            services.Configure<AppSettings>(a => a.BaseUrl = "http://localhost:5000");
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            loggerFactory.AddConsole();
+            loggerFactory.AddDebug();
+
+            app.UseMiddleware<TestAuthenticationMiddlewareForApiKey>();
+            app.UseHangfireServer();
+            app.UseMvc();
+        }
+    }
+```
+
 ## Further
 See complete list of examples from test project.
 
