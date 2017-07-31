@@ -70,25 +70,25 @@ namespace Protacon.NetCore.WebApi.TestUtil
                 .ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
         }
 
-        public TestHost MockPassing<TMock>(Action<TMock> asserts)
+        public TestHost Passing<TService>(Action<TService> asserts)
         {
-            var target = _server.Host.Services.GetService(typeof(TMock));
+            var target = _server.Host.Services.GetService(typeof(TService));
 
             if (target == null)
-                throw new InvalidOperationException($"Tried to mock type '{typeof(TMock)}' but nothing matched in current host container.");
+                throw new InvalidOperationException($"Tried to get type '{typeof(TService)}' but nothing matched in current host container.");
 
-            asserts((TMock)target);
+            asserts((TService)target);
             return this;
         }
 
-        public TestHost MockSetup<TMock>(Action<TMock> setups)
+        public TestHost Setup<TService>(Action<TService> setups)
         {
-            var target = _server.Host.Services.GetService(typeof(TMock));
+            var target = _server.Host.Services.GetService(typeof(TService));
 
             if (target == null)
-                throw new InvalidOperationException($"Tried to mock type '{typeof(TMock)}' but nothing matched in current host container.");
+                throw new InvalidOperationException($"Tried to get type '{typeof(TService)}' but nothing matched in current host container.");
 
-            setups((TMock)target);
+            setups((TService)target);
             return this;
         }
 
