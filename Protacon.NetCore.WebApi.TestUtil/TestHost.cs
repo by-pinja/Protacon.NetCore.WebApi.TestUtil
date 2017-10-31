@@ -4,32 +4,26 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 
 namespace Protacon.NetCore.WebApi.TestUtil
 {
-    public class TestHost
+    public static class TestHost
     {
-        private readonly TestServer _server;
-
-        private TestHost(TestServer server)
+        public static CallResponse Get(this TestServer server, string uri, Dictionary<string, string> headers = null)
         {
-            _server = server;
-        }
-
-        public CallResponse Get(string uri, Dictionary<string, string> headers = null)
-        {
-            using (var client = _server.CreateClient())
+            using (var client = server.CreateClient())
             {
                 AddHeadersIfAny(headers, client);
                 return new CallResponse(client.GetAsync(uri).Result);
             }
         }
 
-        public CallResponse Post(string path, object data, Dictionary<string, string> headers = null)
+        public static CallResponse Post(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
         {
-            using (var client = _server.CreateClient())
+            using (var client = server.CreateClient())
             {
                 AddHeadersIfAny(headers, client);
 
@@ -38,9 +32,9 @@ namespace Protacon.NetCore.WebApi.TestUtil
             }
         }
 
-        public CallResponse Put(string path, object data, Dictionary<string, string> headers = null)
+        public static CallResponse Put(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
         {
-            using (var client = _server.CreateClient())
+            using (var client = server.CreateClient())
             {
                 AddHeadersIfAny(headers, client);
 
@@ -51,9 +45,9 @@ namespace Protacon.NetCore.WebApi.TestUtil
             }
         }
 
-        public CallResponse Delete(string path, Dictionary<string, string> headers = null)
+        public static CallResponse Delete(this TestServer server, string path, Dictionary<string, string> headers = null)
         {
-            using (var client = _server.CreateClient())
+            using (var client = server.CreateClient())
             {
                 AddHeadersIfAny(headers, client);
 
@@ -70,34 +64,34 @@ namespace Protacon.NetCore.WebApi.TestUtil
                 .ForEach(x => client.DefaultRequestHeaders.Add(x.Key, x.Value));
         }
 
-        public TestHost Passing<TService>(Action<TService> asserts)
+        public static TestServer Passing<TService>(this TestServer server, Action<TService> asserts)
         {
-            var target = _server.Host.Services.GetService(typeof(TService));
+            var target = server.Host.Services.GetService(typeof(TService));
 
             if (target == null)
                 throw new InvalidOperationException($"Tried to get type '{typeof(TService)}' but nothing matched in current host container.");
 
             asserts((TService)target);
-            return this;
+            return server;
         }
 
-        public TestHost Setup<TService>(Action<TService> setups)
+        public static TestServer Setup<TService>(this TestServer server, Action<TService> setups)
         {
-            var target = _server.Host.Services.GetService(typeof(TService));
+            var target = server.Host.Services.GetService(typeof(TService));
 
             if (target == null)
                 throw new InvalidOperationException($"Tried to get type '{typeof(TService)}' but nothing matched in current host container.");
 
             setups((TService)target);
-            return this;
+            return server;
         }
 
-        public static TestHost Run<T>() where T : class
+        public static TestServer Run<T>() where T : class
         {
             var server = new TestServer(new WebHostBuilder()
                 .UseStartup<T>());
 
-            return new TestHost(server);
+            return server;
         }
     }
 }
