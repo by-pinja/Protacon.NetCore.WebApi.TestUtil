@@ -70,14 +70,12 @@ namespace Protacon.NetCore.WebApi.TestUtil
 
                     var data = (object)_response.Content.ReadAsByteArrayAsync().Result.ToArray();
                     return new CallData<T>((T)data);
-                case "text/html":
+                default:
                     if (typeof(T) != typeof(string))
-                        throw new InvalidOperationException("Only output type of 'string' is supported for 'text/html'.");
+                        throw new InvalidOperationException($"Only output type of 'string' is supported for '{contentType}'.");
 
                     var result = (object)_response.Content.ReadAsStringAsync().Result;
                     return new CallData<T>((T)result);
-                default:
-                    throw new InvalidOperationException($"Unsupported content type '{contentType}'.");
             }
         }
 
