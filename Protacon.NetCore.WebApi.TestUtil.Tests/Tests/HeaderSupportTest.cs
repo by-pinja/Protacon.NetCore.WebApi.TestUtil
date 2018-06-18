@@ -17,7 +17,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
 
             TestHost.Run<TestStartup>().Invoking(x => x.Get("/headertest/",
                     headers: new Dictionary<string, string> {{"somethingElse", "somevalue"}}))
-                .ShouldThrow<InvalidOperationException>();
+                .Should().Throw<InvalidOperationException>();
         }
     }
 }
