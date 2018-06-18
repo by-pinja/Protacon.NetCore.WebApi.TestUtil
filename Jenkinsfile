@@ -24,7 +24,7 @@ podTemplate(label: pod.label,
       stage('Test') {
         container('dotnet') {
             sh """
-                dotnet test -d -v Protacon.NetCore.WebApi.TestUtil.Tests
+                dotnet test -v d Protacon.NetCore.WebApi.TestUtil.Tests
             """
         }
       }
