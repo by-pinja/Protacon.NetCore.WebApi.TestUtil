@@ -22,11 +22,11 @@ podTemplate(label: pod.label,
         }
       }
       stage('Test') {
-        container('dotnet') {
-            sh """
-                dotnet test -v d Protacon.NetCore.WebApi.TestUtil.Tests
-            """
-        }
+        // container('dotnet') {
+        //     sh """
+        //         dotnet test -v d Protacon.NetCore.WebApi.TestUtil.Tests
+        //     """
+        // }
       }
       stage('Package') {
         container('dotnet') {
