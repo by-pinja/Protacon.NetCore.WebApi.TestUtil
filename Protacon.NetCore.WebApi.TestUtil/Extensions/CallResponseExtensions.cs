@@ -8,7 +8,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Extensions
     {
         public static CallResponse WaitForStatusCode(this CallResponse response, HttpStatusCode statusCode, TimeSpan timeout)
         {
-            DateTime endAt = DateTime.Now.Add(timeout);
+            DateTime endAt = DateTime.UtcNow.Add(timeout);
 
             while (true)
             {
@@ -18,7 +18,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Extensions
                 }
                 catch (ExpectedStatusCodeException ex)
                 {
-                    if (DateTime.Now > endAt)
+                    if (DateTime.UtcNow > endAt)
                     {
                         throw ex;
                     }
