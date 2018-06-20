@@ -16,7 +16,8 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
                 .ExpectStatusCode(HttpStatusCode.NoContent);
 
             TestHost.Run<TestStartup>().Invoking(x => x.Get("/headertest/",
-                    headers: new Dictionary<string, string> {{"somethingElse", "somevalue"}}))
+                    headers: new Dictionary<string, string> {{"somethingElse", "somevalue"}})
+                        .ExpectStatusCode(HttpStatusCode.NoContent))
                 .Should().Throw<InvalidOperationException>();
         }
     }

@@ -12,49 +12,61 @@ namespace Protacon.NetCore.WebApi.TestUtil
 {
     public static class TestHost
     {
-        public static CallResponse Get(this TestServer server, string uri, Dictionary<string, string> headers = null)
+        public static Call Get(this TestServer server, string uri, Dictionary<string, string> headers = null)
         {
-            using (var client = server.CreateClient())
+            return new Call(() =>
             {
-                AddHeadersIfAny(headers, client);
-                return new CallResponse(client.GetAsync(uri).Result);
-            }
+                using (var client = server.CreateClient())
+                {
+                    AddHeadersIfAny(headers, client);
+                    return client.GetAsync(uri).Result;
+                }
+            });
         }
 
-        public static CallResponse Post(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
+        public static Call Post(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
         {
-            using (var client = server.CreateClient())
+            return new Call(() =>
             {
-                AddHeadersIfAny(headers, client);
+                using (var client = server.CreateClient())
+                {
+                    AddHeadersIfAny(headers, client);
 
-                var content = JsonConvert.SerializeObject(data);
-                return new CallResponse(client.PostAsync(path, new StringContent(content, Encoding.UTF8, "application/json")).Result);
-            }
+                    var content = JsonConvert.SerializeObject(data);
+                    return client.PostAsync(path, new StringContent(content, Encoding.UTF8, "application/json")).Result;
+                }
+            });
         }
 
-        public static CallResponse Put(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
+        public static Call Put(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
         {
-            using (var client = server.CreateClient())
+            return new Call(() =>
             {
-                AddHeadersIfAny(headers, client);
+                using (var client = server.CreateClient())
+                {
+                    AddHeadersIfAny(headers, client);
 
-                var content = JsonConvert.SerializeObject(data);
-                return new CallResponse(client
-                    .PutAsync(path, new StringContent(content, Encoding.UTF8, "application/json"))
-                    .Result);
-            }
+                    var content = JsonConvert.SerializeObject(data);
+                    return client
+                        .PutAsync(path, new StringContent(content, Encoding.UTF8, "application/json"))
+                        .Result;
+                }
+            });
         }
 
-        public static CallResponse Delete(this TestServer server, string path, Dictionary<string, string> headers = null)
+        public static Call Delete(this TestServer server, string path, Dictionary<string, string> headers = null)
         {
-            using (var client = server.CreateClient())
+            return new Call(() =>
             {
-                AddHeadersIfAny(headers, client);
+                using (var client = server.CreateClient())
+                {
+                    AddHeadersIfAny(headers, client);
 
-                return new CallResponse(client
-                    .DeleteAsync(path)
-                    .Result);
-            }
+                    return client
+                        .DeleteAsync(path)
+                        .Result;
+                }
+            });
         }
 
         private static void AddHeadersIfAny(Dictionary<string, string> headers, HttpClient client)
