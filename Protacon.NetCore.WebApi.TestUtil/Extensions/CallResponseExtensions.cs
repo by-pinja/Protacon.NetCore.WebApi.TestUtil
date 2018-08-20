@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Protacon.NetCore.WebApi.TestUtil.Extensions
 {
@@ -8,9 +9,10 @@ namespace Protacon.NetCore.WebApi.TestUtil.Extensions
     {
         public static Call WaitForStatusCode(this Call call, HttpStatusCode statusCode, TimeSpan timeout)
         {
-            DateTime endAt = DateTime.UtcNow.Add(timeout);
+            const int testPeriodMs = 500;
+            var timeUsedMs = 0;
 
-            while (true)
+            while(true)
             {
                 try
                 {
@@ -18,12 +20,13 @@ namespace Protacon.NetCore.WebApi.TestUtil.Extensions
                 }
                 catch (ExpectedStatusCodeException ex)
                 {
-                    if (DateTime.UtcNow > endAt)
+                    if (timeUsedMs > timeout.TotalMilliseconds)
                     {
                         throw ex;
                     }
 
-                    Thread.Sleep(500);
+                    timeUsedMs += testPeriodMs;
+                    Task.Delay(testPeriodMs).Wait();
                 }
             }
         }
