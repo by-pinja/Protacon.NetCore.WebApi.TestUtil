@@ -17,11 +17,9 @@ namespace Protacon.NetCore.WebApi.TestUtil
         {
             return Task.Run(() => new Call(() =>
             {
-                using (var client = server.CreateClient())
-                {
-                    AddHeadersIfAny(headers, client);
-                    return client.GetAsync(uri);
-                }
+                var client = server.CreateClient();
+                AddHeadersIfAny(headers, client);
+                return client.GetAsync(uri);
             }));
         }
 
@@ -29,13 +27,11 @@ namespace Protacon.NetCore.WebApi.TestUtil
         {
             return Task.Run(() => new Call(() =>
             {
-                using (var client = server.CreateClient())
-                {
-                    AddHeadersIfAny(headers, client);
+                var client = server.CreateClient();
+                AddHeadersIfAny(headers, client);
 
-                    var content = JsonConvert.SerializeObject(data);
-                    return client.PostAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
-                }
+                var content = JsonConvert.SerializeObject(data);
+                return client.PostAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
             }));
         }
 
@@ -43,13 +39,11 @@ namespace Protacon.NetCore.WebApi.TestUtil
         {
             return Task.Run(() => new Call(() =>
             {
-                using (var client = server.CreateClient())
-                {
-                    AddHeadersIfAny(headers, client);
+                var client = server.CreateClient();
+                AddHeadersIfAny(headers, client);
 
-                    var content = JsonConvert.SerializeObject(data);
-                    return client.PutAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
-                }
+                var content = JsonConvert.SerializeObject(data);
+                return client.PutAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
             }));
         }
 
@@ -57,12 +51,10 @@ namespace Protacon.NetCore.WebApi.TestUtil
         {
             return Task.Run(() => new Call(() =>
             {
-                using (var client = server.CreateClient())
-                {
-                    AddHeadersIfAny(headers, client);
+                var client = server.CreateClient();
+                AddHeadersIfAny(headers, client);
 
-                    return client.DeleteAsync(path);
-                }
+                return client.DeleteAsync(path);
             }));
         }
 
