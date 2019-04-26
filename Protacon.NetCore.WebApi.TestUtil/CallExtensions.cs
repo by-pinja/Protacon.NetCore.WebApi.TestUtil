@@ -78,7 +78,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
                     if (typeof(T) != typeof(string))
                         throw new InvalidOperationException($"Only output type of 'string' is supported for '{contentType}'.");
 
-                    return new CallData<T>((T)(object)content);
+                    return new CallData<T>((T)(object)Encoding.Default.GetString(content));
             }
         }
 

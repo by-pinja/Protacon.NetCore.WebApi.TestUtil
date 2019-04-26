@@ -6,8 +6,6 @@ using NSubstitute;
 using Protacon.NetCore.WebApi.TestUtil.Tests.Dummy;
 using Xunit;
 
-[assembly: CollectionBehavior(DisableTestParallelization = true)]
-
 namespace Protacon.NetCore.WebApi.TestUtil.Tests
 {
     public class TestStartup
@@ -22,7 +20,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests
             services.AddSingleton(Substitute.For<IExternalDepency>());
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddDebug();
             app.UseMvc();
