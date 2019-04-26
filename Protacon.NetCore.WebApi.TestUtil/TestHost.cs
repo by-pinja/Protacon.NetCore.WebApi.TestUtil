@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.TestHost;
@@ -12,61 +13,57 @@ namespace Protacon.NetCore.WebApi.TestUtil
 {
     public static class TestHost
     {
-        public static Call Get(this TestServer server, string uri, Dictionary<string, string> headers = null)
+        public static Task<Call> Get(this TestServer server, string uri, Dictionary<string, string> headers = null)
         {
-            return new Call(() =>
+            return Task.Run(() => new Call(() =>
             {
                 using (var client = server.CreateClient())
                 {
                     AddHeadersIfAny(headers, client);
-                    return client.GetAsync(uri).Result;
+                    return client.GetAsync(uri);
                 }
-            });
+            }));
         }
 
-        public static Call Post(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
+        public static Task<Call> Post(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
         {
-            return new Call(() =>
+            return Task.Run(() => new Call(() =>
             {
                 using (var client = server.CreateClient())
                 {
                     AddHeadersIfAny(headers, client);
 
                     var content = JsonConvert.SerializeObject(data);
-                    return client.PostAsync(path, new StringContent(content, Encoding.UTF8, "application/json")).Result;
+                    return client.PostAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
                 }
-            });
+            }));
         }
 
-        public static Call Put(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
+        public static Task<Call> Put(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
         {
-            return new Call(() =>
+            return Task.Run(() => new Call(() =>
             {
                 using (var client = server.CreateClient())
                 {
                     AddHeadersIfAny(headers, client);
 
                     var content = JsonConvert.SerializeObject(data);
-                    return client
-                        .PutAsync(path, new StringContent(content, Encoding.UTF8, "application/json"))
-                        .Result;
+                    return client.PutAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
                 }
-            });
+            }));
         }
 
-        public static Call Delete(this TestServer server, string path, Dictionary<string, string> headers = null)
+        public static Task<Call> Delete(this TestServer server, string path, Dictionary<string, string> headers = null)
         {
-            return new Call(() =>
+            return Task.Run(() => new Call(() =>
             {
                 using (var client = server.CreateClient())
                 {
                     AddHeadersIfAny(headers, client);
 
-                    return client
-                        .DeleteAsync(path)
-                        .Result;
+                    return client.DeleteAsync(path);
                 }
-            });
+            }));
         }
 
         private static void AddHeadersIfAny(Dictionary<string, string> headers, HttpClient client)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Protacon.NetCore.WebApi.TestUtil
 {
@@ -11,10 +12,10 @@ namespace Protacon.NetCore.WebApi.TestUtil
             _data = data;
         }
 
-        public CallData<T> Passing(Action<T> asserts)
+        public async Task<CallData<T>> Passing(Action<T> asserts)
         {
             asserts.Invoke(_data);
-            return this;
+            return await this;
         }
 
         public TSelect Select<TSelect>(Func<T, TSelect> selector)

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Protacon.NetCore.WebApi.TestUtil.Tests.Dummy;
 using Xunit;
@@ -8,17 +9,18 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
     public class BasicFlowTests
     {
         [Fact]
-        public void WhenGetIsCalled_ThenAssertingItWorks()
+        public async Task WhenGetIsCalled_ThenAssertingItWorks()
         {
-            TestHost.Run<TestStartup>().Get("/returnthree/")
+            await TestHost.Run<TestStartup>().Get("/returnthree/")
                 .ExpectStatusCode(HttpStatusCode.OK)
                 .WithContentOf<int>()
                 .Passing(
                     x => x.Should().Be(3));
 
-            TestHost.Run<TestStartup>().Get("/returnthree/")
+            await TestHost.Run<TestStartup>().Get("/returnthree/")
                 .Invoking(x => x.ExpectStatusCode(HttpStatusCode.NoContent))
-                .Should().Throw<ExpectedStatusCodeException>();
+                .Should()
+                .Throw<ExpectedStatusCodeException>();
         }
 
         [Fact]
