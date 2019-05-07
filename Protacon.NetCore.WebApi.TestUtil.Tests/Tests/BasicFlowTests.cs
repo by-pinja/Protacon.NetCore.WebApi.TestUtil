@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Protacon.NetCore.WebApi.TestUtil.Tests.Dummy;
 using Xunit;
@@ -8,60 +9,65 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
     public class BasicFlowTests
     {
         [Fact]
-        public void WhenGetIsCalled_ThenAssertingItWorks()
+        public async Task WhenGetIsCalled_ThenAssertingItWorks()
         {
-            TestHost.Run<TestStartup>().Get("/returnthree/")
+            var foo = await TestHost.Run<TestStartup>().Get("/returnthree/")
+                .ExpectStatusCode(HttpStatusCode.OK)
+                .WithContentOf<int>();
+
+            await TestHost.Run<TestStartup>().Get("/returnthree/")
                 .ExpectStatusCode(HttpStatusCode.OK)
                 .WithContentOf<int>()
                 .Passing(
                     x => x.Should().Be(3));
 
             TestHost.Run<TestStartup>().Get("/returnthree/")
-                .Invoking(x => x.ExpectStatusCode(HttpStatusCode.NoContent))
-                .Should().Throw<ExpectedStatusCodeException>();
+                .Awaiting(x => x.ExpectStatusCode(HttpStatusCode.NoContent))
+                .Should()
+                .Throw<ExpectedStatusCodeException>();
         }
 
         [Fact]
-        public void WhenDeleteIsCalled_ThenAssertingItWorks()
+        public async Task  WhenDeleteIsCalled_ThenAssertingItWorks()
         {
-            TestHost.Run<TestStartup>().Delete("/something/abc")
+            await TestHost.Run<TestStartup>().Delete("/something/abc")
                 .ExpectStatusCode(HttpStatusCode.NoContent);
 
             TestHost.Run<TestStartup>().Delete("/something/abc")
-                .Invoking(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
+                .Awaiting(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
                 .Should().Throw<ExpectedStatusCodeException>();
         }
 
         [Fact]
-        public void WhenPutIsCalled_ThenAssertingItWorks()
+        public async Task  WhenPutIsCalled_ThenAssertingItWorks()
         {
-            TestHost.Run<TestStartup>().Put("/returnsame/", new DummyRequest { Value = "3" })
+            await TestHost.Run<TestStartup>().Put("/returnsame/", new DummyRequest { Value = "3" })
                 .ExpectStatusCode(HttpStatusCode.OK)
                 .WithContentOf<DummyRequest>()
                 .Passing(x => x.Value.Should().Be("3"));
 
             TestHost.Run<TestStartup>().Put("/returnsame/", new { value = 3 })
-                .Invoking(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
+                .Awaiting(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
                 .Should().Throw<ExpectedStatusCodeException>();
         }
 
         [Fact]
-        public void WhenPostIsCalled_ThenAssertingItWorks()
+        public async Task  WhenPostIsCalled_ThenAssertingItWorks()
         {
-            TestHost.Run<TestStartup>().Post("/returnsame/", new DummyRequest { Value = "3" })
+            await TestHost.Run<TestStartup>().Post("/returnsame/", new DummyRequest { Value = "3" })
                 .ExpectStatusCode(HttpStatusCode.OK)
                 .WithContentOf<DummyRequest>()
                 .Passing(x => x.Value.Should().Be("3"));
 
             TestHost.Run<TestStartup>().Post("/returnsame/", new { value = 3 })
-                .Invoking(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
+                .Awaiting(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
                 .Should().Throw<ExpectedStatusCodeException>();
         }
 
         [Fact]
-        public void WhenNonAcceptedCodeIsExpected_ThenAcceptItAsResult()
+        public async Task  WhenNonAcceptedCodeIsExpected_ThenAcceptItAsResult()
         {
-            TestHost.Run<TestStartup>().Get("/errorcontent/")
+            await TestHost.Run<TestStartup>().Get("/errorcontent/")
                 .ExpectStatusCode(HttpStatusCode.NotFound)
                 .WithContentOf<DummyRequest>()
                 .Passing(x => x.Value.Should().Be("error"));
@@ -71,7 +77,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
         public void WhenExpectedCodeIsNotDefinedOnError_ThenFail()
         {
             TestHost.Run<TestStartup>().Get("/errorcontent/")
-                .Invoking(x => x.WithContentOf<DummyRequest>())
+                .Awaiting(x => x.WithContentOf<DummyRequest>())
                 .Should().Throw<ExpectedStatusCodeException>();
         }
     }

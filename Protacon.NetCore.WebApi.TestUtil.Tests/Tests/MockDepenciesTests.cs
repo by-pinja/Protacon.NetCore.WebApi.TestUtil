@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NSubstitute;
 using Protacon.NetCore.WebApi.TestUtil.Tests.Dummy;
@@ -9,14 +10,14 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
     public class MockDepenciesTests
     {
         [Fact]
-        public void WhenHeadersAreDefined_ThenPassThemToApi()
+        public async Task WhenHeadersAreDefined_ThenPassThemToApi()
         {
             var host = TestHost.Run<TestStartup>();
 
             // See TestStartup for information what is done before this.
            host.Setup<IExternalDepency>(x => x.SomeCall(Arg.Is("abc")).Returns("3"));
 
-            host.Get("/external/abc")
+            await host.Get("/external/abc")
                 .ExpectStatusCode(HttpStatusCode.OK)
                 .WithContentOf<DummyRequest>()
                 .Passing(x => x.Value.Should().Be("3"));

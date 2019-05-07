@@ -8,9 +8,9 @@ This is lightweight wrapper and collection of useful tools to work with .Net Cor
 ## Example GET
 ```cs
     [Fact]
-    public void WhenGetIsCalled_ThenAssertingItWorks()
+    public async Task WhenGetIsCalled_ThenAssertingItWorks()
     {
-        TestHost.Run<TestStartup>().Get("/returnthree/")
+        await TestHost.Run<TestStartup>().Get("/returnthree/")
             .ExpectStatusCode(HttpStatusCode.OK)
             .WithContentOf<int>()
             .Passing(
@@ -21,9 +21,9 @@ This is lightweight wrapper and collection of useful tools to work with .Net Cor
 ## Example POST
 ```cs
     [Fact]
-    public void WhenPostIsCalled_ThenAssertingItWorks()
+    public async Task WhenPostIsCalled_ThenAssertingItWorks()
     {
-        TestHost.Run<TestStartup>().Post("/returnsame/", new DummyRequest { Value = "3" })
+        await TestHost.Run<TestStartup>().Post("/returnsame/", new DummyRequest { Value = "3" })
             .ExpectStatusCode(HttpStatusCode.OK)
             .WithContentOf<DummyRequest>()
             .Passing(x => x.Value.Should().Be("3"));
@@ -61,11 +61,8 @@ This is lightweight wrapper and collection of useful tools to work with .Net Cor
             services.Configure<AppSettings>(a => a.BaseUrl = "http://localhost:5000");
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app)
         {
-            loggerFactory.AddConsole();
-            loggerFactory.AddDebug();
-
             app.UseMiddleware<TestAuthenticationMiddlewareForApiKey>();
             app.UseHangfireServer();
             app.UseMvc();
