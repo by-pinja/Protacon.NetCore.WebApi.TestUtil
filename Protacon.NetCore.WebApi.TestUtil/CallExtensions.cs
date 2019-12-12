@@ -95,6 +95,10 @@ namespace Protacon.NetCore.WebApi.TestUtil
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                     WriteIndented = false
                 });
+
+                if(asObject == null)
+                    throw new InvalidOperationException($"Cannot serialize '{asString}' as type '{typeof(T)}': type resolved as null");
+
                 return new CallData<T>(asObject);
             }
             catch (JsonException)
