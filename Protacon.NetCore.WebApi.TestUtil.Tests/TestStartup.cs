@@ -10,7 +10,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests
 {
     public class TestStartup
     {
-        public TestStartup(IHostingEnvironment env)
+        public TestStartup()
         {
         }
 
@@ -22,8 +22,10 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddDebug();
-            app.UseMvc();
+            app.UseRouting();
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+            });
         }
     }
 }
