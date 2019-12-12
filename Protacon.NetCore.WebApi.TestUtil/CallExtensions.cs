@@ -1,10 +1,12 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 
 namespace Protacon.NetCore.WebApi.TestUtil
@@ -64,7 +66,6 @@ namespace Protacon.NetCore.WebApi.TestUtil
 
             var contentType = result.Content.Headers.Single(x => x.Key == "Content-Type").Value.FirstOrDefault() ?? "";
 
-
             switch (contentType)
             {
                 case var ctype when ctype.StartsWith("application/json"):
@@ -88,10 +89,15 @@ namespace Protacon.NetCore.WebApi.TestUtil
 
             try
             {
-                var asObject = JsonConvert.DeserializeObject<T>(asString);
+                var asObject = JsonSerializer.Deserialize<T>(asString, new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = false
+                });
                 return new CallData<T>(asObject);
             }
-            catch (JsonSerializationException)
+            catch (JsonException)
             {
                 throw new InvalidOperationException($"Cannot serialize '{asString}' as type '{typeof(T)}'");
             }
