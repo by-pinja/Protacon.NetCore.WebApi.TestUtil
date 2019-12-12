@@ -7,7 +7,7 @@ library "jenkins-ptcs-library@2.2.0"
 // certain ptcs-library command requires containers (like docker or gcloud.)
 podTemplate(label: pod.label,
   containers: pod.templates + [ // This adds all depencies for jenkins-ptcs-library methods to function correctly.
-    containerTemplate(name: 'dotnet', image: 'microsoft/dotnet:2.1-sdk', ttyEnabled: true, command: '/bin/sh -c', args: 'cat')
+    containerTemplate(name: 'dotnet', image: 'mcr.microsoft.com/dotnet/core/sdk:3.1', ttyEnabled: true, command: '/bin/sh -c', args: 'cat')
   ]
 ) {
     node(pod.label) {
