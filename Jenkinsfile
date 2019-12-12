@@ -1,7 +1,7 @@
 // This file serves as working example and tests pipeline library functionality at same time.
 // env.BRANCH_NAME isn't correct way to use this library elswhere.
 // Actual version may be library 'jenkins-ptcs-library@2.0.0'
-library "jenkins-ptcs-library@master"
+library "jenkins-ptcs-library@2.2.0"
 
 // pod provides common utilies and tools to jenkins-ptcs-library function correctly.
 // certain ptcs-library command requires containers (like docker or gcloud.)
