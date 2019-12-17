@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
 
 namespace Protacon.NetCore.WebApi.TestUtil
 {
@@ -30,7 +29,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
                 var client = server.CreateClient();
                 AddHeadersIfAny(headers, client);
 
-                var content = JsonConvert.SerializeObject(data);
+                var content = JsonSerializer.Serialize(data);
                 return client.PostAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
             }));
         }
@@ -42,7 +41,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
                 var client = server.CreateClient();
                 AddHeadersIfAny(headers, client);
 
-                var content = JsonConvert.SerializeObject(data);
+                var content = JsonSerializer.Serialize(data);
                 return client.PutAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
             }));
         }

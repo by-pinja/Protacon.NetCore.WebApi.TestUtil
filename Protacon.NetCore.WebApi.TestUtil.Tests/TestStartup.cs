@@ -1,16 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Protacon.NetCore.WebApi.TestUtil.Tests.Dummy;
-using Xunit;
 
 namespace Protacon.NetCore.WebApi.TestUtil.Tests
 {
     public class TestStartup
     {
-        public TestStartup(IHostingEnvironment env)
+        public TestStartup()
         {
         }
 
@@ -20,10 +17,16 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests
             services.AddSingleton(Substitute.For<IExternalDepency>());
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app)
         {
-            loggerFactory.AddDebug();
+#if NETCOREAPP2_1
             app.UseMvc();
+#else
+            app.UseRouting();
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+            });
+#endif
         }
     }
 }
