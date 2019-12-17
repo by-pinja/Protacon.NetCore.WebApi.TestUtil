@@ -20,7 +20,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests
             services.AddSingleton(Substitute.For<IExternalDepency>());
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
             app.UseEndpoints(endpoints => {
