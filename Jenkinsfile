@@ -30,9 +30,6 @@ podTemplate(label: pod.label,
       }
       stage('Package') {
         container('dotnet31') {
-          sh """
-              dotnet pack
-          """
           publishTagToNuget("Protacon.NetCore.WebApi.TestUtil")
         }
       }
