@@ -22,17 +22,20 @@ podTemplate(label: pod.label,
       stage('Test') {
         container('dotnet31') {
             sh """
-                dotnet test --framework=netcoreapp3.1 -v d Protacon.NetCore.WebApi.TestUtil.Tests
+                dotnet test --framework=netcoreapp3.1 Protacon.NetCore.WebApi.TestUtil.Tests
             """
         }
         container('dotnet21') {
             sh """
-                dotnet test --framework=netcoreapp2.1 -v d Protacon.NetCore.WebApi.TestUtil.Tests
+                dotnet test --framework=netcoreapp2.1 Protacon.NetCore.WebApi.TestUtil.Tests
             """
         }
       }
       stage('Package') {
         container('dotnet31') {
+          sh """
+              dotnet pack
+          """
           publishTagToNuget("Protacon.NetCore.WebApi.TestUtil")
         }
       }
