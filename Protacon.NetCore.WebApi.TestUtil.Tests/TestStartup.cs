@@ -19,10 +19,14 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests
 
         public void Configure(IApplicationBuilder app)
         {
+#if NETCOREAPP2_1
+            app.UseMvc();
+#else
             app.UseRouting();
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });
+#endif
         }
     }
 }
