@@ -20,14 +20,11 @@ podTemplate(label: pod.label,
         }
       }
       stage('Test') {
+        // For some reason running 2.1 tests in CI requires combination of frameworks during test run,
+        // otherwise it complains about invalid framework 3.1 even when --framework==...2.1 is set?
         container('dotnet31') {
             sh """
                 dotnet test --framework=netcoreapp3.1 Protacon.NetCore.WebApi.TestUtil.Tests
-            """
-        }
-        container('dotnet21') {
-            sh """
-                dotnet test --framework=netcoreapp2.1 Protacon.NetCore.WebApi.TestUtil.Tests
             """
         }
       }
