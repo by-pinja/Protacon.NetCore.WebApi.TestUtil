@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Protacon.NetCore.WebApi.TestUtil
 {
@@ -87,12 +87,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
 
             try
             {
-                var asObject = JsonSerializer.Deserialize<T>(asString, new JsonSerializerOptions
-                {
-                    IgnoreNullValues = true,
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    WriteIndented = false
-                });
+                var asObject = JsonConvert.DeserializeObject<T>(asString);
 
                 if(asObject == null)
                     throw new InvalidOperationException($"Cannot serialize '{asString}' as type '{typeof(T)}': type resolved as null");
