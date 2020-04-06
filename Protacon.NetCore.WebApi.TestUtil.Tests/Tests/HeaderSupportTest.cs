@@ -22,5 +22,14 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
                         .ExpectStatusCode(HttpStatusCode.NoContent))
                 .Should().Throw<InvalidOperationException>();
         }
+
+        [Fact]
+        public async Task WhenHeaderRespond_ThenPassThemToHeaderPass()
+        {
+            await TestHost.Run<TestStartup>().Get("/headertest/response-headers/")
+                .ExpectStatusCode(HttpStatusCode.NoContent)
+                .HeaderPassing("Content-Language", value => value.Should().Be("fi_FI"))
+                .HeaderPassing("X-Powered-By", value => value.Should().Be("pinja"));
+        }
     }
 }
