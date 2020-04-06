@@ -32,6 +32,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
             var response = await call.HttpTask.ConfigureAwait(false);
 
             var match = response.Headers
+                .Concat(response.Content.Headers)
                 .SingleOrDefault(x => x.Key == header);
 
             if (match.Equals(default(KeyValuePair<string, IEnumerable<string>>)))
@@ -44,7 +45,8 @@ namespace Protacon.NetCore.WebApi.TestUtil
 
         private static string HeadersAsReadableList(HttpResponseMessage message)
         {
-            return message.Headers.Select(x => x.Key.ToString()).Aggregate("", (a, b) => $"{a}, {b}");
+            return message.Headers.Concat(message.Content.Headers)
+                .Select(x => x.Key.ToString()).Aggregate("", (a, b) => $"{a}, {b}");
         }
 
         public static async Task<CallData<T>> WithContentOf<T>(this Task<Call> callTask)

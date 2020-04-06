@@ -50,8 +50,17 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Controllers
         [HttpGet("/headertest/")]
         public IActionResult Header([FromHeader] string example)
         {
-            if(example == null)
+            if (example == null)
                 throw new InvalidOperationException();
+
+            return NoContent();
+        }
+
+        [HttpGet("/headertest/response-headers/")]
+        public IActionResult ResponseHeaders()
+        {
+            Response.Headers.Add("X-Powered-By", "pinja");
+            Response.Headers.Add("Content-Language", "fi_FI");
 
             return NoContent();
         }
