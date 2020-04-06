@@ -31,8 +31,8 @@ namespace Protacon.NetCore.WebApi.TestUtil
             var call = await callTask.ConfigureAwait(false);
             var response = await call.HttpTask.ConfigureAwait(false);
 
-            var match = response.Content.Headers
-                .Concat(response.Headers)
+            var match = response.Headers
+                .Concat(response.Content.Headers)
                 .SingleOrDefault(x => x.Key == header);
 
             if (match.Equals(default(KeyValuePair<string, IEnumerable<string>>)))
