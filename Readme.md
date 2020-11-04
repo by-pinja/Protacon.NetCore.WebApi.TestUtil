@@ -1,11 +1,13 @@
-[![Nuget](https://img.shields.io/nuget/dt/Protacon.NetCore.WebApi.TestUtil.svg)](https://www.nuget.org/packages/Protacon.NetCore.WebApi.TestUtil/)
-
 # Test utilities for Net Core web api
+
+[![Nuget](https://img.shields.io/nuget/dt/Protacon.NetCore.WebApi.TestUtil.svg)](https://www.nuget.org/packages/Protacon.NetCore.WebApi.TestUtil/)
 
 This is lightweight wrapper and collection of useful tools to work with .Net Core isolated test host.
 
-# Examples
-## Example GET
+## Examples
+
+### Example GET
+
 ```cs
     [Fact]
     public async Task WhenGetIsCalled_ThenAssertingItWorks()
@@ -18,7 +20,8 @@ This is lightweight wrapper and collection of useful tools to work with .Net Cor
     }
 ```
 
-## Example POST
+### Example POST
+
 ```cs
     [Fact]
     public async Task WhenPostIsCalled_ThenAssertingItWorks()
@@ -30,8 +33,10 @@ This is lightweight wrapper and collection of useful tools to work with .Net Cor
     }
 ```
 
-## Example StartUp classes
-### Standalone test startup
+### Example StartUp classes
+
+## Standalone test startup
+
 ```cs
     public class TestStartup
     {
@@ -71,6 +76,7 @@ This is lightweight wrapper and collection of useful tools to work with .Net Cor
 ```
 
 ### With real Startup
+
 ```cs
 public class TestStartup
 {
@@ -121,15 +127,19 @@ public class TestStartup
     }
 }
 ```
+
 ## Further
+
 See complete list of examples from test project.
 
 ## Mocking depencies from DI
+
 ```cs
 host.MockSetup<IExternalDepency>(x => x.SomeCall(Arg.Is("abc")).Returns("3"));
 ```
 
 ## Replacing depencies in test host
+
 ```cs
     public void ConfigureServices(IServiceCollection services)
     {
@@ -141,4 +151,5 @@ host.MockSetup<IExternalDepency>(x => x.SomeCall(Arg.Is("abc")).Returns("3"));
 ```
 
 ## Asserting and mocking
+
 These utilities are framework independant. Use your favorite assertion and mocking libraries.
