@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Protacon.NetCore.WebApi.TestUtil.Tests
 {
-    public class WaitForContentTests
+    public class WaitForTests
     {
         [Fact]
         public void WhenNoValidResponseIsReceived_ThenThrowErrorAfterTimeout()
