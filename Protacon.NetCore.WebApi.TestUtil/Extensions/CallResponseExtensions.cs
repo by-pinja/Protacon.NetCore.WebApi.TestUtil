@@ -8,10 +8,10 @@ namespace Protacon.NetCore.WebApi.TestUtil.Extensions
     {
         public static async Task<Call> WaitForStatusCode(this Task<Call> call, HttpStatusCode statusCode, TimeSpan timeout)
         {
-            const int testPeriodMs = 500;
+            const int testPeriodMs = 100;
             var timeUsedMs = 0;
 
-            while(true)
+            while (true)
             {
                 try
                 {
@@ -19,15 +19,50 @@ namespace Protacon.NetCore.WebApi.TestUtil.Extensions
                 }
                 catch (ExpectedStatusCodeException ex)
                 {
-                    if (timeUsedMs > timeout.TotalMilliseconds)
-                    {
-                        throw ex;
-                    }
-
-                    timeUsedMs += testPeriodMs;
-                    Task.Delay(testPeriodMs).Wait();
+                    timeUsedMs = WaitTimeHandler(timeout, testPeriodMs, timeUsedMs, ex);
                 }
             }
+        }
+
+        public static async Task<Call> WaitFor<T>(
+            this Task<Call> call,
+            Action<T> assertionToFulfill,
+            TimeSpan timeout,
+            HttpStatusCode expectedStatusCode = HttpStatusCode.OK)
+        {
+            const int testPeriodMs = 100;
+            var timeUsedMs = 0;
+
+            while (true)
+            {
+                try
+                {
+                    var result = await (await call)
+                        .Clone()
+                        .ExpectStatusCode(expectedStatusCode)
+                        .WithContentOf<T>()
+                        .Passing(assertionToFulfill)
+                        .ConfigureAwait(false);
+
+                    return await call;
+                }
+                catch (Exception ex)
+                {
+                    timeUsedMs = WaitTimeHandler(timeout, testPeriodMs, timeUsedMs, ex);
+                }
+            }
+        }
+
+        private static int WaitTimeHandler(TimeSpan timeout, int testPeriodMs, int timeUsedMs, Exception ex)
+        {
+            if (timeUsedMs > timeout.TotalMilliseconds)
+            {
+                throw ex;
+            }
+
+            timeUsedMs += testPeriodMs;
+            Task.Delay(testPeriodMs).Wait();
+            return timeUsedMs;
         }
     }
 }
