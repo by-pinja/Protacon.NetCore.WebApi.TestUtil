@@ -15,7 +15,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Extensions
             {
                 try
                 {
-                    return await (await call).Clone().ExpectStatusCode(statusCode).ConfigureAwait(false);
+                    return await (await call.ConfigureAwait(false)).Clone().ExpectStatusCode(statusCode).ConfigureAwait(false);
                 }
                 catch (ExpectedStatusCodeException ex)
                 {
@@ -37,14 +37,16 @@ namespace Protacon.NetCore.WebApi.TestUtil.Extensions
             {
                 try
                 {
-                    var result = await (await call)
+                    var clonedCall = (await call.ConfigureAwait(false))
                         .Clone()
-                        .ExpectStatusCode(expectedStatusCode)
+                        .ExpectStatusCode(expectedStatusCode);
+                    
+                    await clonedCall
                         .WithContentOf<T>()
                         .Passing(assertionToFulfill)
                         .ConfigureAwait(false);
 
-                    return await call;
+                    return await clonedCall;
                 }
                 catch (Exception ex)
                 {
