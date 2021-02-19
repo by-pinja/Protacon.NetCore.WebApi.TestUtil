@@ -10,7 +10,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests
         {
             using (var jsonDoc = JsonDocument.ParseValue(ref reader))
             {
-                return new CustomTestObject(jsonDoc.RootElement.GetRawText());
+                return new CustomTestObject(jsonDoc.RootElement.GetString());
             }
         }
 

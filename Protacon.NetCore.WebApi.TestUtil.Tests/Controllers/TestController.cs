@@ -20,6 +20,16 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Controllers
             return Ok(3);
         }
 
+        [HttpGet("/returnobject/")]
+        public IActionResult GetObject()
+        {
+            return Ok(new DummyRequest
+            {
+                Value = "5",
+                AnotherValue = new CustomTestObject("default_value")
+            });
+        }
+
         [HttpPost("/returnsame/")]
         public IActionResult Post([FromBody] DummyRequest arg)
         {
