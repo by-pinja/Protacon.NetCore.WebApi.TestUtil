@@ -52,7 +52,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
         }
 
         [Fact]
-        public async Task  WhenPostIsCalled_ThenAssertingItWorks()
+        public async Task WhenPostIsCalled_ThenAssertingItWorks()
         {
             await TestHost.Run<TestStartup>().Post("/returnsame/", new DummyRequest { Value = "3" })
                 .ExpectStatusCode(HttpStatusCode.OK)

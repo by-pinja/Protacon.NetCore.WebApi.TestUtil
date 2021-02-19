@@ -69,7 +69,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
             switch (contentType)
             {
                 case var ctype when ctype.StartsWith("application/json"):
-                    return ParseJson<T>(content);
+                    return ParseJson<T>(content, call.SerializerOptions);
                 case "application/pdf":
                     if (typeof(T) != typeof(byte[]))
                         throw new InvalidOperationException("Only output type of 'byte[]' is supported for 'application/pdf'.");
@@ -83,18 +83,13 @@ namespace Protacon.NetCore.WebApi.TestUtil
             }
         }
 
-        private static CallData<T> ParseJson<T>(byte[] content)
+        private static CallData<T> ParseJson<T>(byte[] content, JsonSerializerOptions options)
         {
             var asString = Encoding.Default.GetString(content);
 
             try
             {
-                var asObject = JsonSerializer.Deserialize<T>(asString, new JsonSerializerOptions
-                {
-                    IgnoreNullValues = true,
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    WriteIndented = false
-                });
+                var asObject = JsonSerializer.Deserialize<T>(asString, options);
 
                 if(asObject == null)
                     throw new InvalidOperationException($"Cannot serialize '{asString}' as type '{typeof(T)}': type resolved as null");
