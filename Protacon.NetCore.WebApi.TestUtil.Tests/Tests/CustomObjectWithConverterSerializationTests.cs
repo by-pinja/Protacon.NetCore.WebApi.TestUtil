@@ -6,10 +6,10 @@ using Xunit;
 
 namespace Protacon.NetCore.WebApi.TestUtil.Tests
 {
-    public class CustomeObjectWithConverterSerializationTests
+    public class CustomObjectWithConverterSerializationTests
     {
         [Fact]
-        public async Task WhenGetIsCalled_ThenAssertingItWorks()
+        public async Task WhenCustomObjectIsRequested_ThenItCanBeParsedProperlyWithCustomConverterInBothEnds()
         {
             await TestHost.Run<TestStartup>().Get("/returnobject/")
                 .ExpectStatusCode(HttpStatusCode.OK)
