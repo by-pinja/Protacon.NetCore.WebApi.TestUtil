@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Options;
 
 namespace Protacon.NetCore.WebApi.TestUtil
 {
@@ -19,7 +21,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
                 var client = server.CreateClient();
                 AddHeadersIfAny(headers, client);
                 return client.GetAsync(uri);
-            }));
+            }, GetSerializerOptionsOrDefault(server)));
         }
 
         public static Task<Call> Post(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
@@ -29,9 +31,21 @@ namespace Protacon.NetCore.WebApi.TestUtil
                 var client = server.CreateClient();
                 AddHeadersIfAny(headers, client);
 
-                var content = JsonSerializer.Serialize(data);
+                var content = JsonSerializer.Serialize(data, GetSerializerOptionsOrDefault(server));
                 return client.PostAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
-            }));
+            }, GetSerializerOptionsOrDefault(server)));
+        }
+
+        // Similar solution as in https://github.com/RicoSuter/NSwag/blob/d71fc5e5c2e3422b8a00f3d4c2ff792163af6457/src/NSwag.Generation.AspNetCore/AspNetCoreOpenApiDocumentGenerator.cs#L139
+        // If newtonsoft support is needed Nswag has example from it too.
+        private static JsonSerializerOptions GetSerializerOptionsOrDefault(TestServer server)
+        {
+            var serviceProvider = server.Services;
+            var optionsAssembly = Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Mvc.Core"));
+            var optionsType = typeof(IOptions<>).MakeGenericType(optionsAssembly.GetType("Microsoft.AspNetCore.Mvc.JsonOptions", true));
+
+            var options = serviceProvider?.GetService(optionsType) as dynamic;
+            return (JsonSerializerOptions)options?.Value?.JsonSerializerOptions;
         }
 
         public static Task<Call> Put(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
@@ -41,9 +55,9 @@ namespace Protacon.NetCore.WebApi.TestUtil
                 var client = server.CreateClient();
                 AddHeadersIfAny(headers, client);
 
-                var content = JsonSerializer.Serialize(data);
+                var content = JsonSerializer.Serialize(data, GetSerializerOptionsOrDefault(server));
                 return client.PutAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
-            }));
+            }, GetSerializerOptionsOrDefault(server)));
         }
 
         public static Task<Call> Delete(this TestServer server, string path, Dictionary<string, string> headers = null)
@@ -54,7 +68,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
                 AddHeadersIfAny(headers, client);
 
                 return client.DeleteAsync(path);
-            }));
+            }, GetSerializerOptionsOrDefault(server)));
         }
 
         private static void AddHeadersIfAny(Dictionary<string, string> headers, HttpClient client)

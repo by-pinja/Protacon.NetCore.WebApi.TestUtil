@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Protacon.NetCore.WebApi.TestUtil
@@ -15,17 +16,20 @@ namespace Protacon.NetCore.WebApi.TestUtil
         internal HttpStatusCode? ExpectedStatusCode { get; set; }
 
         internal Task<HttpResponseMessage> HttpTask { get; }
+        internal JsonSerializerOptions SerializerOptions { get; }
+
         private readonly Func<Task<HttpResponseMessage>> _httpTaskFactory;
 
-        public Call(Func<Task<HttpResponseMessage>> httpCall)
+        public Call(Func<Task<HttpResponseMessage>> httpCall, JsonSerializerOptions serializerOptions)
         {
             _httpTaskFactory = httpCall;
+            SerializerOptions = serializerOptions;
             HttpTask = httpCall.Invoke();
         }
 
         internal Task<Call> Clone()
         {
-            return Task.Run(() => new Call(_httpTaskFactory));
+            return Task.Run(() => new Call(_httpTaskFactory, SerializerOptions));
         }
     }
 }
