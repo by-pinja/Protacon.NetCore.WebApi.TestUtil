@@ -91,6 +91,25 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Controllers
             });
         }
 
+        [HttpPatch("/patchtestroute/")]
+        public IActionResult PatchTestRoute([FromBody] DummyRequest request)
+        {
+            var value = new DummyRequest
+            {
+                Value = "Not modified"
+            };
+
+            if(request.Value != default)
+                value.Value = request.Value;
+
+            return Ok(value);
+        }
+
+        public class PatchRequest
+        {
+            public int? TestPatchValue { get; set; }
+        }
+
         [HttpGet("/page/")]
         public IActionResult Page()
         {
