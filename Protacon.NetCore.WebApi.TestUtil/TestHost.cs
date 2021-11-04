@@ -60,6 +60,18 @@ namespace Protacon.NetCore.WebApi.TestUtil
             }, GetSerializerOptionsOrDefault(server)));
         }
 
+        public static Task<Call> Patch(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
+        {
+            return Task.Run(() => new Call(() =>
+            {
+                var client = server.CreateClient();
+                AddHeadersIfAny(headers, client);
+
+                var content = JsonSerializer.Serialize(data, GetSerializerOptionsOrDefault(server));
+                return client.PatchAsync(path, new StringContent(content, Encoding.UTF8, "application/json"));
+            }, GetSerializerOptionsOrDefault(server)));
+        }
+
         public static Task<Call> Delete(this TestServer server, string path, Dictionary<string, string> headers = null)
         {
             return Task.Run(() => new Call(() =>
