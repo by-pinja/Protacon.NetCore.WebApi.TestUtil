@@ -65,6 +65,15 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
         }
 
         [Fact]
+        public async Task WhenPatchIsCalled_ThenAssertingItWorks()
+        {
+            await TestHost.Run<TestStartup>().Patch("/patchtestroute/", new DummyRequest { Value = "3" })
+                .ExpectStatusCode(HttpStatusCode.OK)
+                .WithContentOf<DummyRequest>()
+                .Passing(x => x.Value.Should().Be("3"));
+        }
+
+        [Fact]
         public async Task  WhenNonAcceptedCodeIsExpected_ThenAcceptItAsResult()
         {
             await TestHost.Run<TestStartup>().Get("/errorcontent/")
