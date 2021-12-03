@@ -42,7 +42,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
         {
             var serviceProvider = server.Services;
 
-            #if NET60
+            #if NET6_0_OR_GREATER
             var options = (IOptions<Microsoft.AspNetCore.Mvc.JsonOptions>)serviceProvider?.GetService(typeof(IOptions<Microsoft.AspNetCore.Mvc.JsonOptions>));
             return options.Value.JsonSerializerOptions;
             #else
@@ -50,7 +50,7 @@ namespace Protacon.NetCore.WebApi.TestUtil
             var optionsType = typeof(IOptions<>).MakeGenericType(optionsAssembly.GetType("Microsoft.AspNetCore.Mvc.JsonOptions", true));
 
             var options = serviceProvider?.GetService(optionsType) as dynamic;
-            return (JsonSerializerOptions)options?.Value?.JsonSerializerOptions;.
+            return (JsonSerializerOptions)options?.Value?.JsonSerializerOptions;
             #endif
         }
 
