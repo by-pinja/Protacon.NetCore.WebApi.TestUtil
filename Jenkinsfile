@@ -21,7 +21,7 @@ podTemplate(label: pod.label,
       stage('Test') {
         container('dotnet') {
             sh """
-              dotnet test --framework=net5.0 Protacon.NetCore.WebApi.TestUtil.Tests
+              dotnet test --framework=net6.0 Protacon.NetCore.WebApi.TestUtil.Tests
             """
         }
       }
