@@ -41,11 +41,17 @@ namespace Protacon.NetCore.WebApi.TestUtil
         private static JsonSerializerOptions GetSerializerOptionsOrDefault(TestServer server)
         {
             var serviceProvider = server.Services;
+
+            #if NET6_0_OR_GREATER
+            var options = (IOptions<Microsoft.AspNetCore.Mvc.JsonOptions>)serviceProvider?.GetService(typeof(IOptions<Microsoft.AspNetCore.Mvc.JsonOptions>));
+            return options.Value.JsonSerializerOptions;
+            #else
             var optionsAssembly = Assembly.Load(new AssemblyName("Microsoft.AspNetCore.Mvc.Core"));
             var optionsType = typeof(IOptions<>).MakeGenericType(optionsAssembly.GetType("Microsoft.AspNetCore.Mvc.JsonOptions", true));
 
             var options = serviceProvider?.GetService(optionsType) as dynamic;
             return (JsonSerializerOptions)options?.Value?.JsonSerializerOptions;
+            #endif
         }
 
         public static Task<Call> Put(this TestServer server, string path, object data, Dictionary<string, string> headers = null)
