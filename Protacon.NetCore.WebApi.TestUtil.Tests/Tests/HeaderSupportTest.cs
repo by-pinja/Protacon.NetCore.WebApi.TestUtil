@@ -16,11 +16,11 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
                     headers: new Dictionary<string, string> {{"example", "somevalue"}})
                 .ExpectStatusCode(HttpStatusCode.NoContent);
 
-            TestHost.Run<TestStartup>()
+            await TestHost.Run<TestStartup>()
                 .Awaiting(x => x.Get("/headertest/",
                     headers: new Dictionary<string, string> {{"somethingElse", "somevalue"}})
                         .ExpectStatusCode(HttpStatusCode.NoContent))
-                .Should().Throw<InvalidOperationException>();
+                .Should().ThrowAsync<InvalidOperationException>();
         }
 
         [Fact]

@@ -10,19 +10,19 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests
     public class WaitForStatusCodeTests
     {
         [Fact]
-        public void WhenErronousCodeIsReturned_ThenThrowErrorAfterTimeout()
+        public async Task WhenErronousCodeIsReturned_ThenThrowErrorAfterTimeout()
         {
-            TestHost.Run<TestStartup>().Get("/returnthree/")
+            await TestHost.Run<TestStartup>().Get("/returnthree/")
                 .Awaiting(x => x.WaitForStatusCode(HttpStatusCode.BadRequest, TimeSpan.FromSeconds(2)))
-                .Should().Throw<ExpectedStatusCodeException>();
+                .Should().ThrowAsync<ExpectedStatusCodeException>();
         }
 
         [Fact]
-        public void WhenValidCodeIsReturned_ThenReturnWithoutError()
+        public async Task WhenValidCodeIsReturned_ThenReturnWithoutError()
         {
-            TestHost.Run<TestStartup>().Get("/returnthree/")
+            await TestHost.Run<TestStartup>().Get("/returnthree/")
                 .Awaiting(x => x.WaitForStatusCode(HttpStatusCode.OK, TimeSpan.FromSeconds(2)))
-                .Should().NotThrow<Exception>();
+                .Should().NotThrowAsync<Exception>();
         }
     }
 }
