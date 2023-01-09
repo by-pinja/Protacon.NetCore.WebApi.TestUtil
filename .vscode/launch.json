@@ -5,20 +5,6 @@
    "version": "0.2.0",
    "configurations": [
         {
-            "name": ".NET Core Launch (console)",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceRoot}/Protacon.NetCore.WebApi.TestUtil.Tests/bin/Debug/netcoreapp3.1/Protacon.NetCore.WebApi.TestUtil.Tests.dll",
-            "args": [],
-            "cwd": "${workspaceRoot}/Protacon.NetCore.WebApi.TestUtil.Tests",
-            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
-            "console": "internalConsole",
-            "stopAtEntry": false,
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach",

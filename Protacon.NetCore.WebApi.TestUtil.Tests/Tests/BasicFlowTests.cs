@@ -21,10 +21,10 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
                 .Passing(
                     x => x.Should().Be(3));
 
-            TestHost.Run<TestStartup>().Get("/returnthree/")
+            await TestHost.Run<TestStartup>().Get("/returnthree/")
                 .Awaiting(x => x.ExpectStatusCode(HttpStatusCode.NoContent))
                 .Should()
-                .Throw<ExpectedStatusCodeException>();
+                .ThrowAsync<ExpectedStatusCodeException>();
         }
 
         [Fact]
@@ -33,9 +33,9 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
             await TestHost.Run<TestStartup>().Delete("/something/abc")
                 .ExpectStatusCode(HttpStatusCode.NoContent);
 
-            TestHost.Run<TestStartup>().Delete("/something/abc")
+            await TestHost.Run<TestStartup>().Delete("/something/abc")
                 .Awaiting(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
-                .Should().Throw<ExpectedStatusCodeException>();
+                .Should().ThrowAsync<ExpectedStatusCodeException>();
         }
 
         [Fact]
@@ -46,9 +46,9 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
                 .WithContentOf<DummyRequest>()
                 .Passing(x => x.Value.Should().Be("3"));
 
-            TestHost.Run<TestStartup>().Put("/returnsame/", new { value = 3 })
+            await TestHost.Run<TestStartup>().Put("/returnsame/", new { value = 3 })
                 .Awaiting(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
-                .Should().Throw<ExpectedStatusCodeException>();
+                .Should().ThrowAsync<ExpectedStatusCodeException>();
         }
 
         [Fact]
@@ -59,9 +59,9 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
                 .WithContentOf<DummyRequest>()
                 .Passing(x => x.Value.Should().Be("3"));
 
-            TestHost.Run<TestStartup>().Post("/returnsame/", new { value = 3 })
+            await TestHost.Run<TestStartup>().Post("/returnsame/", new { value = 3 })
                 .Awaiting(x => x.ExpectStatusCode(HttpStatusCode.NotFound))
-                .Should().Throw<ExpectedStatusCodeException>();
+                .Should().ThrowAsync<ExpectedStatusCodeException>();
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
         }
 
         [Fact]
-        public async Task  WhenNonAcceptedCodeIsExpected_ThenAcceptItAsResult()
+        public async Task WhenNonAcceptedCodeIsExpected_ThenAcceptItAsResult()
         {
             await TestHost.Run<TestStartup>().Get("/errorcontent/")
                 .ExpectStatusCode(HttpStatusCode.NotFound)
@@ -83,11 +83,11 @@ namespace Protacon.NetCore.WebApi.TestUtil.Tests.Tests
         }
 
         [Fact]
-        public void WhenExpectedCodeIsNotDefinedOnError_ThenFail()
+        public async Task WhenExpectedCodeIsNotDefinedOnError_ThenFail()
         {
-            TestHost.Run<TestStartup>().Get("/errorcontent/")
+            await TestHost.Run<TestStartup>().Get("/errorcontent/")
                 .Awaiting(x => x.WithContentOf<DummyRequest>())
-                .Should().Throw<ExpectedStatusCodeException>();
+                .Should().ThrowAsync<ExpectedStatusCodeException>();
         }
     }
 }
